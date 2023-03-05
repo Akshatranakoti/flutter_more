@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
         {'text': 'black', 'score': 10},
         {'text': 'red', 'score': 5},
         {'text': 'blue', 'score': 6},
-        {'text': 'green', 'score': 5}
+        {'text': 'green', 'score': 1}
       ],
     },
     {
@@ -49,6 +49,12 @@ class _MyAppState extends State<MyApp> {
 
   var _questionindex = 0;
   var _totalScore = 0;
+  void _resetQuiz() {
+    setState(() {
+      _questionindex = 0;
+      _totalScore = 0;
+    });
+  }
 
   void _answerQuestion(int score) {
     _totalScore += score;
@@ -64,12 +70,28 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: const Text("My APP"),
       ),
-      body: _questionindex < _questions.length
-          ? Quiz(
-              answerQuestion: _answerQuestion,
-              questions: _questions,
-              questionIndex: _questionindex)
-          : Result(_totalScore),
+      body: Column(
+        children: [
+          _questionindex < _questions.length
+              ? Column(
+                  children: [
+                    Quiz(
+                        answerQuestion: _answerQuestion,
+                        questions: _questions,
+                        questionIndex: _questionindex),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "$_totalScore",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )
+              : Result(_totalScore, _resetQuiz),
+        ],
+      ),
     ));
   }
 }
